@@ -1,5 +1,6 @@
 CC := gcc
-CFLAGS := -Wall -Wextra -Werror -O2 -MMD -MP
+#CFLAGS := -Wall -Wextra -Werror -O2 -MMD -MP
+CFLAGS := -std=c23 -Wall -Wextra -O2 -MMD -MP
 SRCDIR := src
 BUILDDIR := build
 TARGET := $(BUILDDIR)/main
