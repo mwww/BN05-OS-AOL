@@ -38,7 +38,11 @@ void pp_push(ProcessPool* pp, Process p) {
 
 void pp_remove(ProcessPool* pp, size_t index) {
     pthread_mutex_lock(&pp->mutex);
-    pp->processes[index] = pp->processes[--pp->length];
+    size_t len = pp->length;
+    for (size_t i = index + 1; i < len; i++) {
+        pp->processes[i - 1] = pp->processes[i];
+    }
+    pp->length -= 1;
     pthread_mutex_unlock(&pp->mutex);
 }
 
@@ -52,7 +56,7 @@ void pp_run_round_robin(ProcessPool* pp, double timeout) {
         }
         bool is_complete = process_run(&pp->processes[current_process], timeout);
         pthread_mutex_unlock(&pp->mutex);
-        
+
         // wait for a bit of time to let insertion happen
         for (size_t i = 0; i < 10000; i++) {
             rand();

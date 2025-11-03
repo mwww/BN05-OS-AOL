@@ -13,9 +13,25 @@ void* scheduler(void* _);
 void* controller(void* _);
 
 int main() {
-    printf("\x1b[2J"); // clear screen
-    printf("\x1b[?25l"); // hide cursor
-    printf("\x1b[?25l"); // hide cursor
+    printf("\x1b[2J");    // clear screen
+    printf("\x1b[?25l");  // hide cursor
+    printf(
+        "\x1b[H"
+        "╭──────────────╮\n"
+        "│              │\n"
+        "│              │\n"
+        "│              │\n"
+        "│              │\n"
+        "│              │\n"
+        "│              │\n"
+        "│              │\n"
+        "│              │\n"
+        "│              │\n"
+        "│              │\n"
+        "│              │\n"
+        "│              │\n"
+        "╰ [n]ew [q]uit ╯\n"
+    );
     pp = pp_new();
 
     pthread_t scheduler_thread;
@@ -26,8 +42,8 @@ int main() {
 
     pthread_join(control_thread, NULL);
     pthread_cancel(scheduler_thread);
-    printf(RESET); // reset color
-    printf("\x1b[?25h"); // show cursor
+    printf(RESET);        // reset color
+    printf("\x1b[?25h");  // show cursor
 }
 
 #pragma GCC diagnostic push
