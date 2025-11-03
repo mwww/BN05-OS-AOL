@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "process.h"
@@ -45,19 +46,27 @@ void pp_run_round_robin(ProcessPool* pp, double timeout) {
     size_t current_process = 0;
     while (true) {
         pthread_mutex_lock(&pp->mutex);
-        bool is_complete = process_run(&pp->processes[current_process], timeout);
-        pthread_mutex_unlock(&pp->mutex);
-
-        if (is_complete) {
-            pp_remove(pp, current_process);
-        } else {
-            current_process += 1;
-        }
-        pthread_mutex_lock(&pp->mutex);
         if (pp->length == 0) {
             pthread_mutex_unlock(&pp->mutex);
             return;
         }
+        bool is_complete = process_run(&pp->processes[current_process], timeout);
+        pthread_mutex_unlock(&pp->mutex);
+        
+        // wait for a bit of time to let insertion happen
+        for (size_t i = 0; i < 10000; i++) {
+            rand();
+        }
+
+        if (is_complete) {
+            pp_remove(pp, current_process);
+            if (pp->length == 0) {
+                return;
+            }
+        } else {
+            current_process += 1;
+        }
+        pthread_mutex_lock(&pp->mutex);
         current_process %= pp->length;
         pthread_mutex_unlock(&pp->mutex);
     }

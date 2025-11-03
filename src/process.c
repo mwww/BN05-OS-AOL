@@ -1,3 +1,4 @@
+#include "ansi_colors.h"
 #include "process.h"
 
 #include <stdio.h>
@@ -16,19 +17,18 @@ Process process_new(size_t iterations) {
 
 bool process_run(Process* process, double timeout) {
     clock_t start = clock();
-    printf("[%u] started\n", process->pid);
-
+    printf(YELLOW"\x1b[%u;1H[%u] running \n"RESET, process->pid + 2, process->pid);
     int64_t randsum = 0;
     while (process->iterations-- > 0) {
         randsum += rand() % 2;
         double secs_since_start = ((double)(clock() - start)) / CLOCKS_PER_SEC;
         if (secs_since_start > timeout) {
-            printf("[%u] paused\n", process->pid);
+            printf("\x1b[%u;1H[%u] paused  \n", process->pid + 2, process->pid);
             return false;
         }
     }
 
-    printf("[%u] finished\n", process->pid);
+    printf(GREEN"\x1b[%u;1H[%u] finished\n"RESET, process->pid + 2, process->pid);
     process->time_executed += clock() - start;
     return true;
 }
