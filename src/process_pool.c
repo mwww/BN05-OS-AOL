@@ -37,7 +37,7 @@ void pp_push(ProcessPool* pp, Process p) {
 
 void pp_remove(ProcessPool* pp, size_t index) {
     pthread_mutex_lock(&pp->mutex);
-    pp->processes[index] = pp->processes[pp->length-- - 1];
+    pp->processes[index] = pp->processes[--pp->length];
     pthread_mutex_unlock(&pp->mutex);
 }
 
