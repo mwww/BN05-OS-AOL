@@ -1,1 +1,6 @@
+# Standard build directory
 /build/
+
+# Editor configuration
+/.idea/
+/.vscode/
