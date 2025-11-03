@@ -23,6 +23,6 @@ make
 ```
 
 ## Contributors:
-1. Jason Saputra Ang - 2792252456
+1. Jason Saputra Ang - 2702252456
 2. Louis Ruisani - 2702260994
 3. Muhammad Iqbal - 2702332904
