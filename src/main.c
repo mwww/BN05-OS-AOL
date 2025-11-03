@@ -17,7 +17,7 @@ int main() {
     printf("\x1b[?25l");  // hide cursor
     printf(
         "\x1b[H"
-        "╭──────────────╮\n"
+        "╭ Round-robin ─╮\n"
         "│              │\n"
         "│              │\n"
         "│              │\n"
