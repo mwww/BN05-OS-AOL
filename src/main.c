@@ -15,20 +15,12 @@ int main() {
     printf("\x1b[?25l");  // hide cursor
     printf(
         "\x1b[H"
-        "╭ Round-robin ─╮\n"
-        "│              │\n"
-        "│              │\n"
-        "│              │\n"
-        "│              │\n"
-        "│              │\n"
-        "│              │\n"
-        "│              │\n"
-        "│              │\n"
-        "│              │\n"
-        "│              │\n"
-        "│              │\n"
-        "│              │\n"
-        "╰ [n]ew [q]uit ╯\n"
+        "╭──── Round-robin ────╮\n"
+        "│ No active process.  │\n"
+        "│                     │\n"
+        "│ Press `n` to spawn  │\n"
+        "│ new process...      │\n"
+        "╰─────── [n]ew [q]uit ╯\n"
     );
     pp = pp_new();
 
@@ -42,6 +34,14 @@ int main() {
     pthread_cancel(scheduler_thread);
     printf(RESET);        // reset color
     printf("\x1b[?25h");  // show cursor
+    printf("╰─────────────────────╯\n");
+    printf(
+        "╭─────────── OS Group 8 ───────────╮\n"
+        "│ - Jason Saputra Ang (2702252456) │\n"
+        "│ - Louis Ruisani (2702260994)     │\n"
+        "│ - Muhammad Iqbal (2702332904)    │\n"
+        "╰──────────────────────────────────╯\n"
+    );
 }
 
 #pragma GCC diagnostic push
@@ -56,6 +56,27 @@ void* controller(void* _) {
         char c = getchar();
         if (c == 'n') {
             pp_push(&pp, process_new(8'000'000));
+            size_t count = pp_total_created();
+            size_t current_idx = pp_current_process_pid(&pp);
+
+            if (current_idx < count) {
+                for (int i = (int)current_idx; i < (int)count; ++i) {
+                    printf("\x1b[%d;1H│%*s│\n", i + 4, 21, "");
+                }
+            }
+
+            // int delta = 4 - (int)count;
+            const int delta = (4 - (int)count) < 0 ? 0 : (4 - (int)count); // delta cant be < 0 or things brokie.
+
+            if (delta > 0) {
+                for (int i = 1; i < delta+2; ++i) {
+                    printf("\x1b[%d;1H│%*s│\n", (int)count + i, 21, "");
+                }
+            }
+
+            printf("\x1b[%d;1H╰─────── [n]ew [q]uit ╯\n", delta + (int)count + 2);
+            printf("                       \n");
+
         } else if (c == 'q') {
             terminal_deinit_raw();
             return NULL;

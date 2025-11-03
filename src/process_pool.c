@@ -13,6 +13,7 @@ ProcessPool pp_new() {
         .processes = calloc(1, sizeof(Process)),
         .length = 0,
         .capacity = 1,
+        .current_process_pid = 0,
     };
     pthread_mutex_init(&pp.mutex, NULL);
     return pp;
@@ -46,6 +47,18 @@ void pp_remove(ProcessPool* pp, size_t index) {
     pthread_mutex_unlock(&pp->mutex);
 }
 
+size_t pp_total_created() {
+    extern PID _process_last_pid;
+    return _process_last_pid;
+}
+
+PID pp_current_process_pid(ProcessPool* pp) {
+    pthread_mutex_lock(&pp->mutex);
+    PID pid = pp->current_process_pid;
+    pthread_mutex_unlock(&pp->mutex);
+    return pid;
+}
+
 void pp_run_round_robin(ProcessPool* pp, double timeout) {
     size_t current_process = 0;
     while (true) {
@@ -54,6 +67,7 @@ void pp_run_round_robin(ProcessPool* pp, double timeout) {
             pthread_mutex_unlock(&pp->mutex);
             return;
         }
+        pp->current_process_pid = pp->processes[current_process].pid;
         bool is_complete = process_run(&pp->processes[current_process], timeout);
         pthread_mutex_unlock(&pp->mutex);
 

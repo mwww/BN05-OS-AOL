@@ -17,13 +17,13 @@ Process process_new(size_t iterations) {
 
 bool process_run(Process* process, double timeout) {
     clock_t start = clock();
-    printf(YELLOW"\x1b[%u;2H[%-2u] running \n"RESET, process->pid + 2, process->pid);
-    int64_t randsum = 0;
+    printf("\x1b[%u;1H│"YELLOW"[%2u] running         "RESET"│\n", process->pid + 2, process->pid);
+    // int64_t randsum = 0;
     while (process->iterations-- > 0) {
-        randsum += rand() % 2;
+        // randsum += rand() % 2; // @jason ini buat apa?
         double secs_since_start = ((double)(clock() - start)) / CLOCKS_PER_SEC;
         if (secs_since_start > timeout) {
-            printf("\x1b[%u;2H[%-2u] paused  \n", process->pid + 2, process->pid);
+            printf("\x1b[%u;1H│[%-2u] paused          │\n", process->pid + 2, process->pid);
             return false;
         }
     }

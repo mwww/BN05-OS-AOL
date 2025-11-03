@@ -10,6 +10,7 @@ typedef struct ProcessPool {
     Process* processes;
     size_t length;
     size_t capacity;
+    PID current_process_pid;
     pthread_mutex_t mutex;
 } ProcessPool;
 
@@ -17,4 +18,6 @@ ProcessPool pp_new();
 Process pp_get(ProcessPool* pp, size_t index);
 void pp_push(ProcessPool* pp, Process p);
 void pp_remove(ProcessPool* pp, size_t index);
+size_t pp_total_created();
+PID pp_current_process_pid(ProcessPool* pp);
 void pp_run_round_robin(ProcessPool* pp, double timeout);
