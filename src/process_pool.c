@@ -53,7 +53,12 @@ void pp_run_round_robin(ProcessPool* pp, double timeout) {
         } else {
             current_process += 1;
         }
-        if (pp->length == 0) return;
+        pthread_mutex_lock(&pp->mutex);
+        if (pp->length == 0) {
+            pthread_mutex_unlock(&pp->mutex);
+            return;
+        }
         current_process %= pp->length;
+        pthread_mutex_unlock(&pp->mutex);
     }
 }
