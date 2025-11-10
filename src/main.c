@@ -24,8 +24,6 @@ int main() {
     pthread_join(control_thread, NULL);
     pthread_cancel(scheduler_thread);
 
-    tui_exit();
-
     return 0;
 }
 
@@ -45,9 +43,10 @@ void* controller(void* _) {
             const int count = (int)pp_total_created();
             const int current_idx = (int)pp_current_process_pid(&pp);
             tui_update_process_list(current_idx, count);
-
         } else if (c == 'q') {
+            const int count = (int)pp_total_created();
             terminal_deinit_raw();
+            tui_exit(count);
             return NULL;
         }
     }

@@ -4,7 +4,7 @@
 
 // sudah tapi belum
 void tui_init();
-void tui_exit();
+void tui_exit(int last_pid);
 
 // render process' state
 void tui_display_process_running(uint32_t pid);

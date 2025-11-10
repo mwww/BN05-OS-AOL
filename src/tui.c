@@ -16,9 +16,15 @@ void tui_init() {
     );
 }
 
-void tui_exit() {
+void tui_exit(int last_pid) {
     printf(RESET);
-    printf("╰─────────────────────╯\n");
+    printf("%d", last_pid);
+    printf("\x1b[%u;1H╰─────────────────────╯\n", last_pid + 2);
+    if (last_pid == 0) {
+        printf("\x1b[%u;1H│ No processes were   │\n", last_pid + 2);
+        printf("\x1b[%u;1H│ started.            │\n", last_pid + 3);
+        printf("\x1b[%u;1H╰─────────────────────╯\n", last_pid + 4);
+    }
     printf(
         "╭─────────── OS Group 8 ───────────╮\n"
         "│ - Jason Saputra Ang (2702252456) │\n"
